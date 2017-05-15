@@ -9,15 +9,15 @@ def read(fname):
 
 
 conf = dict(
-        name='tiber',
+        name='valeriovive',
         version='0.1',
-        description='Twitter fIlter Bubble ExpeRiment',
+        description='Twitter Filter Bubble Experiment',
         long_description=read('README.md'),
         author='cocconat',
         author_email='g3-3k@paranoici.org',
-        url='https://github.com/g3-3k/tiber',
+        url='https://github.com/g3-3k/valeriovive',
         license='AGPL',
-        packages=['tiber'],
+        packages=['valeriovive'],
         install_requires=[
             'tweepy',
             'pymongo',
