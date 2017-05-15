@@ -7,25 +7,26 @@ import logging.config
 import argparse
 import sys, time
 from daemon import Daemon
- 
+
 #!/usr/bin/env python
 
 import sys, time
 from daemon import Daemon
 
 def getparser():
-	parser = argparse.ArgumentParser(description='Process some integers.')
-	parser.add_argument('integers', metavar='N', type=int, nargs='+',
+        parser = argparse.ArgumentParser(description='Process some integers.')
+        parser.add_argument('file', dest='conf_file', metavar='N', type=int, nargs='+',
                     help='an integer for the accumulator')
-	parser.add_argument('--start', dest='start', action='store_true',
+        parser.add_argument('--start', dest='start', action='store_true',
                     const=sum, default=max,
                     help='start tiber ')
-    parser.add_argument('--restart', dest='restart', action='store_true',
+        parser.add_argument('--restart', dest='restart', action='store_true',
                     const=sum, default=max,
                     help='restart tiber ')
-	parser.add_argument('--stop', dest='stop', action='store_true',
+        parser.add_argument('--stop', dest='stop', action='store_true',
                     const=sum, default=max,
                     help='stop tiber ')
+        return parser
 
 class Experiment(Scheduler, Daemon):
     """
@@ -36,12 +37,15 @@ class Experiment(Scheduler, Daemon):
     in the 'bots' attribute.
     """
     def __init__(self, *args, **kwargs):
-        Scheduler.__init__(self, self.experiment_manager)
+        Scheduler.__init__(self, self.events_manager)
         Daemon.__init__(self, *args, **kwargs)
         self.bots=[]
-        self.common_file = common_file
-        for arg in args:
-            nano= Nano(self.dict_from_json(arg),self.dict_from_json(common_file))
+        self.conf_file = None
+
+    def prepare_experiment(self, conf_file ):
+        conf = self.dict_from_json(conf_file)
+        for agent in conf['agents']:
+            nano= Nano(conf[agent],conf['common'])
             self.bots.append(nano)
 
     @staticmethod
@@ -49,7 +53,6 @@ class Experiment(Scheduler, Daemon):
         with open(json_file) as json_data:
             dict_ = json.load(json_data)
         return dict_
-
     """
     Start the experiment.
     Argument:
@@ -61,7 +64,7 @@ class Experiment(Scheduler, Daemon):
     Do the relevant action for the experiment:
     1) For each nano, at scheduled time, start online experience
     """
-    def experiment_manager(self):
+    def events_manager(self):
         for nano in self.bots:
             for event_time in self.events:
                 self.schedule_event(nano.online_experience(),event_time)
@@ -69,23 +72,23 @@ class Experiment(Scheduler, Daemon):
             self.events = []
 
 if __name__ == "__main__":
-	args = parser.parse_args()        
+    args = getparser()
 
-	if args.start:
-		daemon.start()
-	if args.stop:
-		daemon.stop()
-	if args.restart:
-		daemon.restart()
-		sys.exit(0)
-	else:
-		print "usage: %s start|stop|restart" % sys.argv[0]
-		sys.exit(2)
+    experiment=Experiment("/tmp/tiber.pid")
+    if args.start:
+            experiment.start()
+    if args.stop:
+            experiment.stop()
+            sys.exit(0)
+    if args.restart:
+            experiment.restart()
+
+    print "usage: %s start|stop|restart" % sys.argv[0]
     logging.config.fileConfig('logging.ini')
     logging.basicConfig(format='%(asctime)s %(message)s',level=logging.DEBUG)
     log = logging.getLogger("root")
 
-    experiment=Experiment(pidfile)
+
     experiment.set_hours(Experiment.dict_from_json("sbinzolo.json")['hours'])
     experiment.start_experiment(datetime.timedelta(days=3).total_seconds())
 
