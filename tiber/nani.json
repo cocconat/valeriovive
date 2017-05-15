@@ -2,11 +2,10 @@
 "sbinzolo":{
         "name":"sbinzolo",
         "conf":{
-        "consumer_key":"Mh9rcdJ4B6YysSAi0KTDQFsM1",
-        "consumer_set":"jnnaaj8pCQiGaueKNI1XXzeYTXxCJEdWRxwMA7K0DrmX3IayKr",
-        "access_token":"4217826401-OFPynlsQ82cige27qxGtHNcfRlT7iBqRv3Sk2JN",
-        "secret_token":"4p1r5I6gICElZdAih31OXus3xxcEDtdgh4ZiVLzl127f3"
-        },
+        "consumer_key":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
+        "consumer_set":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
+        "access_token":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
+        "secret_token":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
         "mood":["search_and_retweet", "search_and_follow", "retweet_my_friends"],
         "buddies":["Leila", "Armando", "FortePrenestino"],
         "hashtags":["fasciappesi","cazziemazzi","giuliascopa"],
