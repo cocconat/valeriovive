@@ -9,5 +9,6 @@
     },
     "mood":["search_and_retweet", "search_and_follow", "retweet_my_friends"],
     "buddies":["Leila", "Armando", "FortePrenestino"],
-    "hashtags":["fasciappesi","cazziemazzi","giuliascopa"]
+    "hashtags":["fasciappesi","cazziemazzi","giuliascopa"],
+    "hours":[0, 10, 17, 23]
 }

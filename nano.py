@@ -5,15 +5,18 @@ import logging, Logger
 
 
 class Nano(object):
-    def __init__(self, nano_json, target_json):
-        self.json_ =nano_json
-        self.target_json = target_json
-        self.name = self.get_json(self.json_)['name']
-        self.nano_conf = self.get_json(self.json_)['conf']
+    '''
+    Create Nano Object
+    Nano is the active element of the experiment,it does stuff
+    nano will be initialited with the common and the private conf
+    nano has no perception of time.
+    '''
+    def __init__(self, nano_conf, common_conf):
+        self.common_conf = common_conf
+        self.own_conf = nano_conf
+        self.name = self.own_conf['name']
+        self.nano_conf = self.own_conf['conf']
         self.twitter_agent = TwitterAgent(self.nano_conf,self.name)
-
-        self.myStream = tweepy.Stream(auth=self.twitter_agent.api.auth,
-                        listener=self.twitter_agent)
         self.mood =[]
         self.buddy_list = []
         self.hash_list  = []
@@ -21,22 +24,14 @@ class Nano(object):
         self.logger.addHandler(Logger.get_streamhandler())
         self.logger.info('created Nano {} obj'.format(self.name))
 
-        self.individual_behaviour(nano_json)
+        self.set_behaviour(self.common_conf)
 
 
-    def individual_behaviour(self, json_):
-        self.buddy_list = self.get_json(self.json_)['buddies']
-        self.hash_list  = self.get_json(self.json_)['hashtags']
-        self.mood       = self.get_json(self.json_)['mood']
+    def set_behaviour(self, dict_):
+        self.buddy_list = dict_['buddies']
+        self.hash_list  = dict_['hashtags']
+        self.mood       = dict_['mood']
         self.get_actions()
-
-    def common_behaviour(self, target_json):
-        self.buddy_list = self.get_json(self.target_json)['buddies']
-        self.buddy_list = self.get_json(self.target_json)['buddies']
-        self.hash_list  = self.get_json(self.target_json)['hashtags']
-        self.mood       = self.get_json(self.target_json)['mood']
-        self.get_actions()
-
 
     def get_actions(self):
         self.actions=[]
@@ -47,18 +42,12 @@ class Nano(object):
         # if "retweet_my_friends" in self.mood:
             # self.actions.append(self.twitter_agent.retweet_my_friends)
 
-    @staticmethod
-    def get_json(json_file):
-        with open(json_file) as json_data:
-            nano_conf = json.load(json_data)
-        return nano_conf
-
     def online_experience(self):
         random.shuffle(self.actions)
         for action in self.actions[:2]:
             try:
                 action(self.buddy_list, self.hash_list)
             except:
-                raise ValueError
+                self.exception('')
                 self.logger.error("Online experience it's not working!!! \n")
 
