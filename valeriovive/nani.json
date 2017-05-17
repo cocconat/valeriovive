@@ -1,0 +1,20 @@
+{"agents":["sbinzolo"],
+"sbinzolo":{
+        "name":"sbinzolo",
+        "conf":{
+        "consumer_key":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
+        "consumer_set":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
+        "access_token":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
+        "secret_token":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
+        "actions":["search_and_retweet", "search_and_follow", "retweet_my_friends"],
+        "buddies":["Leila", "Armando", "FortePrenestino"],
+        "hashtags":["fasciappesi","cazziemazzi","giuliascopa"],
+        "hours":[0, 10, 17, 23]
+    },
+"common":{
+        "actions":["search_and_retweet", "search_and_follow", "retweet_my_friends"],
+        "buddies":["Leila", "Armando", "FortePrenestino"],
+        "hashtags":["fasciappesi","cazziemazzi","giuliascopa"],
+        "hours":[0, 10, 17, 23]
+    }
+}
