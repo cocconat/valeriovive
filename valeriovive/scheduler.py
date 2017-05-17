@@ -1,5 +1,5 @@
 import json, sched, datetime, time
-import logging, Logger
+import logging
 import threading
 import random
 
@@ -39,15 +39,16 @@ class Scheduler:
     """
     def routine_manager(self, conf_file):
         logging.info("routine manager start at {}".format(str(datetime.datetime.now())))
-        conf = dict_from_json(conf_file)
+        conf = dict_from_json(conf_file)['common']
 
-        while True and datetime.datetime.now() < conf["end_date"]:
+        while True and datetime.datetime.now() < datetime.datetime.strptime(conf["end_date"],"%Y-%m-%d"):
             self.events_manager()
             self.log.debug("routine manager loop at {}".format(str(datetime.datetime.now())))
-            conf = dict_from_json(conf_file)
+            conf = dict_from_json(conf_file)['common']
             try:
                 if conf["scheduler_interval"] == "midnight":
                     interval_seconds = (datetime.datetime.today().replace(hour=23, minute=59) - datetime.datetime.now()).total_seconds()
+                    self.log.info("Next routine_manager loop at {}".format(datetime.datetime.today().replace(hour=23, minute=59)))
                 if isinstance(conf["scheduler_interval"], int):
                     interval_seconds = datetime.timedelta(hours=conf["scheduler_interval"])
             except KeyError:

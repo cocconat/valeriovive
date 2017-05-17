@@ -3,7 +3,7 @@ from tweepy import OAuthHandler
 import tweepy.streaming
 from tweepy import StreamListener
 from pymongo import MongoClient
-import logging, Logger
+import logging
 import random
 
 class MyStreamListener(tweepy.StreamListener):
@@ -29,21 +29,20 @@ class TwitterAgent():
     userdb Pymando db
     twettsdb Pymando db
     """
-    def __init__(self, conf, name):
+    def __init__(self,name):
         ##cfg is a json with
             #consumer_key
             #consumer_set
             #access_token
             #secret_token
         self.name=name
-        self.auth_cfg=conf
         self.userdb=None
         self.tweetsdb=None
-        self.api, self.auth =self.authenticate(self.auth_cfg)
+        self.api =None
         self.db_instance()
         self.ERROR=[]
-        self.listener = MyStreamListener()
-        self.streamer = tweepy.Stream(auth=self.auth, listener=self.listener)
+        self.listener = None
+        self.streamer = None
         # logging.propagate(False)
 
         self.logger = logging.getLogger('Twitter Agent {}'.format(self.name))
@@ -51,10 +50,14 @@ class TwitterAgent():
     """
     Authenticate
     """
-    def authenticate(self,cfg):
+    def authenticate(self):
         auth=OAuthHandler(cfg["consumer_key"],cfg["consumer_set"])
         auth.set_access_token(cfg["access_token"],cfg["secret_token"])
         return tweepy.API(auth), auth
+
+    def connect(self,cfg):
+        self.api , auth= self.authenticate(cfg)
+        self.streamer = tweepy.Stream(auth, listener=MyStreamListener())
 
     """
     Instanciate Pymong db [a dictionary type]
@@ -158,6 +161,8 @@ class TwitterAgent():
     """
 
     def get_user_timeline(self):
+	# new_tweets = api.user_timeline(screen_name = ,count=200)
+
         return 0
 #     def save_tweets(self,db,query,api=None,count=5000,lastid=0):
         # api=self.api

@@ -22,6 +22,7 @@ conf = dict(
             'tweepy',
             'pymongo',
             'mutagen',
+            'logging',
         ],
         zip_safe=False,
 

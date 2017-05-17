@@ -1,20 +1,24 @@
 {"agents":["sbinzolo"],
 "sbinzolo":{
         "name":"sbinzolo",
-        "conf":{
-        "consumer_key":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
-        "consumer_set":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
-        "access_token":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
-        "secret_token":xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
+        "twitter":{
+        "consumer_key":"o0GpCQkr4cDjWj1T9PHHNRCLZ",
+        "consumer_set":"Ig62FTwWym3lE671k91O3qmQ7Kl7PD61Fwor8zIPqTs4EWz030",
+        "access_token":"863857515276230657-KcIEtUDF7QigCFN7koL3ieDfLtdZpIK",
+        "secret_token":"WzIqvDn9AqT3JHpfyGGsou1KounxodVdvERac2v0nlZR1"
+        },
         "actions":["search_and_retweet", "search_and_follow", "retweet_my_friends"],
         "buddies":["Leila", "Armando", "FortePrenestino"],
         "hashtags":["fasciappesi","cazziemazzi","giuliascopa"],
         "hours":[0, 10, 17, 23]
-    },
+},
 "common":{
         "actions":["search_and_retweet", "search_and_follow", "retweet_my_friends"],
         "buddies":["Leila", "Armando", "FortePrenestino"],
         "hashtags":["fasciappesi","cazziemazzi","giuliascopa"],
-        "hours":[0, 10, 17, 23]
+        "hours":[0, 10, 17, 23],
+        "end_date":"2020-04-03",
+        "scheduler_interval":"midnight"
     }
 }
+

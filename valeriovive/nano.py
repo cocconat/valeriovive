@@ -1,7 +1,8 @@
 from twitter_agent import TwitterAgent
 import tweepy
 import json, random
-import logging, Logger
+import logging
+from scheduler import dict_from_json
 
 
 class Nano(object):
@@ -14,8 +15,8 @@ class Nano(object):
     Attributes
     ==========
     CONF:
-    common_conf dict_from_json  See README
-    own_conf    dict_from_json  See README
+    common_conf dict  See README
+    own_conf    dict  See README
 
     __twitter_agent TwitterAgent(Tweepy)
 
@@ -30,32 +31,34 @@ class Nano(object):
 
 
     '''
-    def __init__(self, conf, common_conf):
-        self.common_conf = common_conf
-        self.__nano_conf = nano_conf
-        self.__twitter_agent = TwitterAgent(self.nano_conf,self.conf['name'])
+    def __init__(self, name, conf_file):
+        self.name=name
+        self.conf_file=conf_file
+        self.twitter_agent = TwitterAgent(name)
         self.actions =[]
         ###
         self.buddy_list = []
         self.hash_list  = []
         self.events=None
-        self.set_behaviour(self.common_conf)
 
         ### loggers
         self.logger = logging.getLogger(__name__)
-        self.logger.addHandler(Logger.get_streamhandler())
-        self.logger.info('created Nano {} obj'.format(self.conf['name']))
+        self.logger.info('created Nano {} obj, and file {}'.format(self.name,conf_file))
 
-
+    # def twitter_conf(conf_file):
+        # try:
+            # return dict_from_json(conf_file)[self.name]["twitter"]
+        # except KeyError:
+            # raise ValueError("missing twitter conf in the configuration file")
     """
     Set behaviour
 
     Dict needs to contain buddies , hashtags , actions
     """
-    def set_behaviour(self, dict_):
-        self.buddy_list = dict_['buddies']
-        self.hash_list  = dict_['hashtags']
-        self.actions       = dict_['actions']
+    def set_behaviour(self):
+        self.buddy_list = dict_from_json(self.conf_file)[self.name]['buddies']
+        self.hash_list  = dict_from_json(self.conf_file)[self.name]['hashtags']
+        self.actions    = dict_from_json(self.conf_file)[self.name]['actions']
         self.get_actions()
 
     def get_actions(self):
@@ -75,7 +78,9 @@ class Nano(object):
     """
     def online_experience(self):
         random.shuffle(self.actions)
-        self.__twitter_agent.get_timeline()
+        if not self.twitter_agent.connect(dict_from_json[self.name]["twitter"]):
+            self.log.error("cannot connect to Twitter!")
+        self.twitter_agent.get_timeline()
         for action in self.actions:
             try:
                 action(self.buddy_list, self.hash_list)
