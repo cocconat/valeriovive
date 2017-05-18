@@ -1,8 +1,8 @@
-from twitter_agent import TwitterAgent
+from valeriovive.twitter_agent import TwitterAgent
 import tweepy
 import json, random
 import logging
-from scheduler import dict_from_json
+from valeriovive.scheduler import dict_from_json
 
 
 class Nano(object):
@@ -61,6 +61,9 @@ class Nano(object):
         self.actions    = dict_from_json(self.conf_file)[self.name]['actions']
         self.get_actions()
 
+    def get_hours(self):
+        return dict_from_json(self.conf_file[self.name]['hours'])
+
     def get_actions(self):
         self.actions=[]
         if "search_and_follow" in self.actions:
@@ -78,9 +81,10 @@ class Nano(object):
     """
     def online_experience(self):
         random.shuffle(self.actions)
-        if not self.twitter_agent.connect(dict_from_json[self.name]["twitter"]):
+        self.twitter_agent.connect(dict_from_json(self.conf_file)[self.name]["twitter"])
+        if not self.twitter_agent.connected:
             self.log.error("cannot connect to Twitter!")
-        self.twitter_agent.get_timeline()
+        self.twitter_agent.get_user_timeline()
         for action in self.actions:
             try:
                 action(self.buddy_list, self.hash_list)

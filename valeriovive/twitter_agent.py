@@ -43,14 +43,15 @@ class TwitterAgent():
         self.ERROR=[]
         self.listener = None
         self.streamer = None
-        # logging.propagate(False)
 
-        self.logger = logging.getLogger('Twitter Agent {}'.format(self.name))
+        ### loggers
+        self.logger = logging.getLogger(__name__)
         self.logger.info('created Twitter Agent{} obj'.format(self.name))
     """
     Authenticate
     """
-    def authenticate(self):
+    @staticmethod
+    def authenticate(cfg):
         auth=OAuthHandler(cfg["consumer_key"],cfg["consumer_set"])
         auth.set_access_token(cfg["access_token"],cfg["secret_token"])
         return tweepy.API(auth), auth
@@ -58,6 +59,11 @@ class TwitterAgent():
     def connect(self,cfg):
         self.api , auth= self.authenticate(cfg)
         self.streamer = tweepy.Stream(auth, listener=MyStreamListener())
+
+    @property
+    def connected(self):
+        return self.api.me()
+
 
     """
     Instanciate Pymong db [a dictionary type]
@@ -159,11 +165,17 @@ class TwitterAgent():
     """
     Save the user user timeline
     """
-
     def get_user_timeline(self):
-	# new_tweets = api.user_timeline(screen_name = ,count=200)
-
-        return 0
+        try:
+            timeline = self.api.home_timeline(count=200)
+        except:
+            self.logger.error("User timeline return error")
+        for tweet in timeline:
+            self.db.insert({"status":{"author_name":tweet.author.name,
+                                "author_id":tweet.author.id,
+                                "author_json":tweet.author._json,
+                                "status_json":tweet.json}
+                                })
 #     def save_tweets(self,db,query,api=None,count=5000,lastid=0):
         # api=self.api
         # try:
